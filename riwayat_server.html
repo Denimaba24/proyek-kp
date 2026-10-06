@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Database Server | PT Daya Sakti Niaga</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-card: rgba(15, 20, 35, 0.6);
+        --accent-cyan: #00f2fe;
+        --accent-green: #00f260;
+      }
+      body {
+        background-color: #050b14;
+        color: #ffffff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        margin: 0;
+        padding: 40px;
+        background-image:
+          linear-gradient(rgba(5, 11, 20, 0.8), rgba(5, 11, 20, 0.95)),
+          url("https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1920&auto=format&fit=crop");
+        background-size: cover;
+        background-attachment: fixed;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .header h1 {
+        color: var(--accent-cyan);
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+      .card {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+      }
+      .kode {
+        color: var(--accent-green);
+        font-weight: 800;
+        font-size: 18px;
+      }
+      .tanggal {
+        color: #cbd5e1;
+        font-size: 14px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      th {
+        color: var(--accent-cyan);
+        text-transform: uppercase;
+      }
+      tr:hover {
+        background: rgba(0, 242, 254, 0.05);
+      }
+
+      .loading {
+        text-align: center;
+        color: var(--accent-cyan);
+        font-weight: 600;
+        padding: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📊 DATA RIWAYAT EXPORT (SERVER MYSQL)</h1>
+        <p style="color: #cbd5e1">
+          Menampilkan data Database MySQL menjadi tabel yang
+          rapi.
+        </p>
+        <a
+          href="index.html"
+          style="
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: bold;
+          "
+          >← Kembali ke Website Utama</a
+        >
+      </div>
+
+      <div id="data-container">
+        <div class="loading">Mengambil data dari server database...</div>
+      </div>
+    </div>
+
+    <script>
+      async function muatDataServer() {
+        const container = document.getElementById("data-container");
+        try {
+          const response = await fetch("ambil_riwayat.php");
+          const result = await response.json();
+
+          if (result.status === "success" && result.data.length > 0) {
+            let html = "";
+
+            result.data.forEach((riwayat) => {
+              let detailData = riwayat.detail_data;
+              let tabelHtml = "";
+
+              if (detailData && detailData.length > 0) {
+           
+                let headers = Object.keys(detailData[0]).filter(
+                  (k) => !k.startsWith("_") && k !== "SYSTEM_ID",
+                );
+
+                tabelHtml += "<table><thead><tr>";
+                headers.forEach((h) => (tabelHtml += `<th>${h}</th>`));
+                tabelHtml += "</tr></thead><tbody>";
+
+                detailData.forEach((row) => {
+                  tabelHtml += "<tr>";
+                  headers.forEach(
+                    (h) => (tabelHtml += `<td>${row[h] || "-"}</td>`),
+                  );
+                  tabelHtml += "</tr>";
+                });
+                tabelHtml += "</tbody></table>";
+              }
+
+              html += `
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="kode">${riwayat.kode_export}</div>
+                                    <div class="tanggal">Waktu Export: ${riwayat.tanggal}</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:24px; font-weight:800;">${riwayat.jumlah_data}</div>
+                                    <div style="font-size:12px; color:#cbd5e1;">Item Tersimpan</div>
+                                </div>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                ${tabelHtml}
+                            </div>
+                        </div>
+                    `;
+            });
+            container.innerHTML = html;
+          } else {
+            container.innerHTML =
+              '<div class="loading" style="color:#ff0844;">Belum ada riwayat data di Server Database.</div>';
+          }
+        } catch (error) {
+          container.innerHTML = `<div class="loading" style="color:#ff0844;">Gagal terhubung ke server: ${error.message}</div>`;
+        }
+      }
+
+      window.onload = muatDataServer;
+    </script>
+  </body>
+</html>

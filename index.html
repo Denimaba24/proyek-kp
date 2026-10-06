@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta
+      name="author"
+      content="SISTEM PENCARIAN DATA DAN PEMBUATAN BARCODE SECARA OTOMATIS DAN CEPAT MELALUI EXPORT FILE EXCEL BERBASIS WEBSITE"
+    />
+    <title>Sistem Pencarian Data dan Pembuatan Barcode Otomatis | PT Daya Sakti Niaga</title>
+
+    <!-- Library Eksternal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="particle-container">
+      <div class="glowing-orb orb-1"></div>
+      <div class="glowing-orb orb-2"></div>
+      <div class="glowing-orb orb-3"></div>
+
+      <div class="star-dust star-1"></div>
+      <div class="star-dust star-2"></div>
+      <div class="star-dust star-3"></div>
+      <div class="star-dust star-4"></div>
+      <div class="star-dust star-5"></div>
+      <div class="star-dust star-6"></div>
+      <div class="star-dust star-7"></div>
+    </div>
+
+    <div class="app-container">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-icon">
+            <img
+              src="https://lh3.googleusercontent.com/d/1NX630osVVyJUvPzczutceKaOsoBKZn02"
+              alt="Logo PT Daya Sakti Niaga"
+            />
+          </div>
+          <div class="brand-text">
+            <h1>Sistem Pembuatan<br />Barcode</h1>
+            <p>Secara Otomatis<br />Dan Instan</p>
+          </div>
+        </div>
+
+        <ul class="nav-menu">
+          <li class="nav-item active" onclick="switchPage('dashboard', this)">
+            <img
+              src="https://lh3.googleusercontent.com/d/1nVFdGimuqnkyK-0iqKgGoI6MqXKTmjK-"
+              class="icon-svg"
+              alt="Dashboard"
+            />
+            Dashboard
+          </li>
+          <li class="nav-item" onclick="switchPage('pencarian', this)">
+            <img
+              src="https://lh3.googleusercontent.com/d/1MEGItRX8aanIVqvphpbvuMSL07WQiacG"
+              class="icon-svg"
+              alt="Pencarian"
+            />
+            Pencarian
+          </li>
+          <li class="nav-item" onclick="switchPage('terpilih', this)">
+            <img
+              src="https://lh3.googleusercontent.com/d/1O-3Tr1eYFXBgFaI4rQs5z2I5t0LsGFnS"
+              class="icon-svg"
+              alt="Export Pencarian"
+            />
+            Export Pencarian
+            <span class="badge" id="count-badge" style="display: none">0</span>
+          </li>
+          <li class="nav-item" onclick="switchPage('database', this)">
+            <img
+              src="https://lh3.googleusercontent.com/d/1Gzhkt9KShiU-0Uq8r-mkvAJ_8Bdnlh_r"
+              class="icon-svg"
+              alt="Database"
+            />
+            Database
+          </li>
+        </ul>
+      </aside>
+        
+      <main class="main-content">
+        <div class="topbar">
+          <button
+            class="hamburger-menu"
+            onclick="
+              document.getElementById('sidebar').classList.toggle('show')
+            "
+          >
+            <svg
+              width="32"
+              height="32"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+          <div class="running-text-wrapper">
+            <div class="running-text-content">
+              Sistem Pencarian Data dan Pembuatan Barcode secara Otomatis
+              &nbsp;&nbsp;&bull;&nbsp;&nbsp; PT Daya Sakti Niaga- Jl. Kapten
+              Darmo Sugondo No.2, Indro, Karangkering, Kec. Kebomas, Kabupaten
+              Gresik, Jawa Timur 61123 &nbsp;&nbsp;&bull;&nbsp;&nbsp; Sistem
+              Pembuatan Barcode secara Otomatis melalui Unggahan File Excell
+            </div>
+          </div>
+        </div>
+
+        <div id="page-dashboard" class="page active">
+          <div class="welcome-section">
+            <h4 class="company-title">PT Daya Sakti Niaga</h4>
+            <h2>Selamat Datang!</h2>
+            <p>
+              Manajemen pengelolaan data menjadi barcode dengan antarmuka super
+              responsif dan presisi tinggi.
+            </p>
+          </div>
+
+          <div class="dashboard-grid">
+            <div
+              class="dash-card blue"
+              onclick="
+                switchPage(
+                  'pencarian',
+                  document.querySelectorAll('.nav-item')[1],
+                )
+              "
+            >
+              <div class="icon-wrapper">
+                <img
+                  src="https://lh3.googleusercontent.com/d/1MEGItRX8aanIVqvphpbvuMSL07WQiacG"
+                  alt="Pencarian"
+                />
+              </div>
+              <h3>PENCARIAN</h3>
+              <p>
+                Cari data barang berdasarkan nama barang atau kata kunci
+                Lainnya!
+              </p>
+              <div
+                style="
+                  font-size: 14px;
+                  font-weight: 800;
+                  color: var(--accent-cyan);
+                "
+              >
+                Buka Menu →
+              </div>
+            </div>
+
+            <div
+              class="dash-card green"
+              onclick="
+                switchPage(
+                  'terpilih',
+                  document.querySelectorAll('.nav-item')[2],
+                )
+              "
+            >
+              <div class="icon-wrapper">
+                <img
+                  src="https://lh3.googleusercontent.com/d/1O-3Tr1eYFXBgFaI4rQs5z2I5t0LsGFnS"
+                  alt="Export"
+                />
+              </div>
+              <h3>EXPORT PENCARIAN</h3>
+              <p>
+                Kumpulkan, siapkan, dan Export data pencarian Berserta Barcode
+                QR dalam bentuk FIle Excel.
+              </p>
+              <div
+                style="
+                  font-size: 14px;
+                  font-weight: 800;
+                  color: var(--accent-green);
+                "
+              >
+                Buka Menu →
+              </div>
+            </div>
+
+            <div
+              class="dash-card purple"
+              onclick="
+                switchPage(
+                  'database',
+                  document.querySelectorAll('.nav-item')[3],
+                )
+              "
+            >
+              <div class="icon-wrapper">
+                <img
+                  src="https://lh3.googleusercontent.com/d/1Gzhkt9KShiU-0Uq8r-mkvAJ_8Bdnlh_r"
+                  alt="Database"
+                />
+              </div>
+              <h3>DATABASE</h3>
+              <p>
+                Kelola file database master (Excel) dan pantau riwayat unduhan.
+              </p>
+              <div style="font-size: 14px; font-weight: 800; color: #d6a4ff">
+                Buka Menu →
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-container">
+            <div class="stat-item">
+              <h4>Total Data</h4>
+              <div class="val" id="stat-total-data">0</div>
+            </div>
+            <div class="stat-item">
+              <h4>Total Export</h4>
+              <div class="val" id="stat-total-export">0</div>
+            </div>
+            <div class="stat-item">
+              <h4>File Database</h4>
+              <div class="val" id="stat-file-db">0</div>
+            </div>
+            <div class="stat-item">
+              <h4>Terakhir Export</h4>
+              <div
+                class="val"
+                id="stat-last-export"
+                style="font-size: 26px; padding-top: 10px"
+              >
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-pencarian" class="page">
+          <div class="content-header">
+            <h2>PENCARIAN</h2>
+            <p>
+              Temukan data secara benar dan tepat di seluruh sheet database.
+            </p>
+          </div>
+
+          <div class="controls-wrapper">
+            <div class="input-group">
+              <label>Ketik Kata Kunci</label>
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Masukkan nama barang atau jenis barang..."
+                autocomplete="off"
+              />
+            </div>
+            <div class="input-group" style="max-width: 350px">
+              <label>Pilih Sheet Sumber</label>
+              <select
+                id="sheetFilterSelect"
+                class="form-control"
+                onchange="triggerSearchNow()"
+              >
+                <option value="ALL">Semua Sheet</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table id="searchTable">
+              <thead>
+                <tr id="searchHeader">
+                  <th>Daftar Pencarian</th>
+                </tr>
+              </thead>
+              <tbody id="searchBody">
+                <tr>
+                  <td
+                    style="
+                      text-align: center;
+                      color: var(--text-muted);
+                      padding: 50px;
+                    "
+                  >
+                    Silahkan ketik di kolom pencarian...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="page-terpilih" class="page">
+          <div
+            class="content-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              flex-wrap: wrap;
+              gap: 15px;
+            "
+          >
+            <div>
+              <h2>EXPORT PENCARIAN</h2>
+              <p>
+                Daftar pencarian yang dipilih dan siap untuk di-export ke Excel.
+              </p>
+            </div>
+            <div style="display: flex; gap: 14px">
+              <button class="btn btn-danger-outline" onclick="clearSelected()">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  ></path>
+                </svg>
+                Hapus Semua
+              </button>
+              <button class="btn btn-success" onclick="downloadExcel()">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+                Unduh File Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table id="selectedTable">
+              <thead>
+                <tr id="selectedHeader">
+                  <th>Data Belum Dipilih...</th>
+                </tr>
+              </thead>
+              <tbody id="selectedBody">
+                <tr>
+                  <td
+                    style="
+                      text-align: center;
+                      color: var(--text-muted);
+                      padding: 50px;
+                    "
+                  >
+                    Daftar kosong. Tambahkan dari menu pencarian.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="page-database" class="page">
+          <div class="content-header">
+            <h2>DATABASE & RIWAYAT</h2>
+            <p>Pusat kontrol file sumber (Excel) dan log aktivitas export.</p>
+          </div>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+              gap: 35px;
+            "
+          >
+            <div>
+              <div
+                style="
+                  background: var(--bg-card);
+                  backdrop-filter: blur(30px);
+                  padding: 40px;
+                  border-radius: var(--radius-lg);
+                  border: 1px solid var(--border-color);
+                  margin-bottom: 35px;
+                  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                "
+              >
+                <h3
+                  style="font-size: 22px; margin-bottom: 24px; font-weight: 800"
+                >
+                  Upload Database Baru
+                </h3>
+                <div class="upload-box">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                    ></path>
+                  </svg>
+                  <h4
+                    style="
+                      font-size: 18px;
+                      margin-bottom: 12px;
+                      font-weight: 800;
+                    "
+                  >
+                    Tarik & Lepas File Excel Ke Sini
+                  </h4>
+                  <p
+                    style="
+                      font-size: 14px;
+                      color: var(--text-muted);
+                      font-weight: 500;
+                    "
+                  >
+                    Format: .xlsx, .xls, .csv
+                  </p>
+                  <input
+                    type="file"
+                    id="fileUpload"
+                    accept=".xlsx, .xls, .csv"
+                    multiple
+                  />
+                </div>
+              </div>
+
+              <div
+                style="
+                  background: var(--bg-card);
+                  backdrop-filter: blur(30px);
+                  padding: 40px;
+                  border-radius: var(--radius-lg);
+                  border: 1px solid var(--border-color);
+                  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 25px;
+                    align-items: center;
+                  "
+                >
+                  <h3 style="font-size: 22px; font-weight: 800">
+                    Master Data File
+                  </h3>
+                  <button
+                    class="btn btn-danger-outline btn-sm"
+                    onclick="clearDatabase()"
+                  >
+                    Kosongkan DB
+                  </button>
+                </div>
+                <div
+                  id="fileListContainer"
+                  style="display: flex; flex-direction: column; gap: 16px"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              style="
+                background: var(--bg-card);
+                backdrop-filter: blur(30px);
+                padding: 40px;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border-color);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+              "
+            >
+              <h3
+                style="font-size: 22px; margin-bottom: 25px; font-weight: 800"
+              >
+                Riwayat Export
+              </h3>
+              <div
+                id="exportHistoryContainer"
+                style="display: flex; flex-direction: column; gap: 16px"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="qrModal" class="modal-overlay">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h3
+          id="modalTitle"
+          style="
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+          "
+        >
+          Detail Barcode
+        </h3>
+        <div class="modal-qr-box"><canvas id="modalCanvas"></canvas></div>
+        <p
+          style="
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 700;
+          "
+        >
+          Data Spesifikasi:
+        </p>
+        <div class="modal-data-text" id="modalDataText"></div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <div id="hiddenCanvasContainer" style="display: none">
+      <canvas id="hiddenCanvas"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
